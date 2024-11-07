@@ -1,0 +1,83 @@
+#citirea fisierului cu calea
+data<-read.table("C:\\Users\\40773\\Desktop\\populatia\\proiect andreea ad.txt",header=TRUE,sep="\t",stringsAsFactors=FALSE)
+
+
+print(data)
+View(data)
+#str(data)-ofera informatii in legatura cu tipul de data ,dimensiuni,numele variabilei.
+str(data)
+#filtrarea coloanelor numerice
+numeric_data <- data[sapply(data, is.numeric)]
+#calculare matricea de corelatie
+corellation_matrix <- cor(numeric_data)
+#afisare matrice de corelatie
+print(corellation_matrix)
+#ceeare histograma pe baza valorilor din coloana Populatia.la.1.Ianuarie.femei
+hist(data$ Populatia.la.1.Ianuarie.femei ,breaks=30,col="lightblue",main="Populatia la 1 Ianuarie.femei")
+
+# Creare boxplot pentru Populatia.la.1.Ianuarie.femei
+boxplot(data$Populatia.la.1.Ianuarie.femei,
+        ylab="Populatia la 1 Ianuarie-femei",
+        col="lightgreen")
+
+# Identificarea coloanelor numerice
+numeric_cols <- sapply(data, is.numeric)
+
+# Setarea layout-ului pentru multiple boxplot-uri
+par(mfrow=c(ceiling(sum(numeric_cols)/2), 2))
+
+# Generarea boxplot-urilor pentru fiecare coloană numerică
+for (col_name in names(data)[numeric_cols]) {
+  boxplot(data[[col_name]],  
+          main=paste("Box plot pentru populatie", col_name),  # Corect: folosește col_name
+          ylab=col_name,  
+          col="lightpink")
+}
+
+
+
+
+par(mfrow=c(1, 1))
+
+#ggplot2
+install.packages("ggplot2")
+library(ggplot2)
+
+ggplot(data, aes(x = Decese.barbati, y = Decese.femei , color = Speranta.de.viata.femei)) +
+  geom_point() +
+  labs(title = "Grafic de Dispersie între Decese.barbati  și Decese.femei ",
+       x = "Decese.barbati",
+       y = "Decese.femei",
+       color = "Speranta.de.viata.femei") +
+  theme_minimal()
+#cu mean() calculam media pe coloana
+# Să presupunem că ai un dataframe numit 'data'
+media_populatie <- mean(data$Populatia.la.1.Ianuarie.femei, na.rm = TRUE)
+print(media_populatie)  
+#cu mean()putem calcula si media pentru mai multe coloane
+numeric_cols <- sapply(data, is.numeric)
+medii <- sapply(data[numeric_cols], mean, na.rm = TRUE)
+print(medii)  
+#functia sd() este folosita pentru a calcula deviatia standard-pe colana specificata
+dev_std_populatie <- sd(data$Populatia.la.1.Ianuarie.femei, na.rm = TRUE)
+print(dev_std_populatie) 
+#functi sd() este folsita si pentru a calcula derivata standard-pentru mai multe coloane
+numeric_cols <- sapply(data, is.numeric)
+dev_std_values <- sapply(data[numeric_cols], sd, na.rm = TRUE)
+print(dev_std_values)  
+#quantile()  este folosita pentru a calcula cuantilele unui set de date(o singura coloana)
+# Să presupunem că ai un dataframe numit 'data'
+cuantile_populatie <- quantile(data$Populatia.la.1.Ianuarie.femei, na.rm = TRUE)
+print(cuantile_populatie)  
+#ggplot2 pt 4 coloane
+ggplot(data, aes(x = Decese.barbati, 
+                 y = Decese.femei, 
+                 size = Populatia.la.1.Ianuarie.femei, 
+                 color = Populatia.la.1.Ianuarie.barbati)) +
+  geom_point(alpha = 0.7) + 
+  labs(title = "Grafic de Dispersie între Decese.barbati și Decese.femei",
+       x = "Decese.barbati",
+       y = "Decese.femei",
+       size = "Populatia la 1 Ianuarie (femei)",
+       color = "Populatia la 1 Ianuarie (barbati)") +
+  theme_minimal()
